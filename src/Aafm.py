@@ -146,9 +146,13 @@ class Aafm:
 	
 	def device_delete_item(self, path):
 
+		#
+		# TODO: This code seems broke, no empty directories just doesn't remove
+		#		It seems it always enter the else bellow
+		#
 		if self.is_device_file_a_directory(path):
 			entries = self.parse_device_list(self.device_list_files(path))
-
+			
 			for filename, entry in entries.iteritems():
 				entry_full_path = os.path.join(path, filename)
 				self.device_delete_item(entry_full_path)
@@ -157,6 +161,8 @@ class Aafm:
 			self.execute('%s shell rmdir %s' % (self.adb, self.device_escape_path(path)))
 
 		else:
+			#-r option added for simplicity 
+			#as it seems this is the code executed every time (removing files, directories)
 			self.execute('%s shell rm %s' % (self.adb, self.device_escape_path(path)))
 
 
